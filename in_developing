@@ -1,0 +1,67 @@
+// assm_laba6.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+//
+
+#include <iostream>
+#include <stdio.h>
+
+int main()
+{
+    int str_index = 0;
+    int stl_index = 0;
+    int matrix1[64]; //матрица 1
+    int matrix2[64]; //матрица 2
+    int matrix3[64];
+    for (size_t i = 0; i < 64; i++) { //задаем случайные значения матрицам от 0 до 10
+        matrix1[i] = rand() % 10;
+        matrix2[i] = rand() % 10;
+    }
+    _asm {
+                
+        //Сложение матриц
+        mov edx, 0;
+        mov ecx, 63; // кол-во итераций
+    cycle:
+        
+        mov edx, matrix1[ecx * 4]; //в edx вытаскиваем переменную matrix1[ecx]. *-ем на 4, т.к sizeof(int) = 4
+        mov eax, matrix2[ecx * 4]; //Аналогично строке выше, но в eax и из matrix2
+        add edx, eax; //складываем
+        mov matrix1[ecx * 4], edx; //перемещаем сумму в соотв. элемент первой матрицы
+        loop cycle;
+
+        mov edx, matrix1[0]; //алгоритм аналогичный предыдущему, но отдельно для нулевого элемента
+        mov eax, matrix2[0];
+        add edx, eax;
+        mov matrix1[0], edx;
+
+        //Умножение матриц
+
+
+        mov ecx, 63;
+        
+
+    cycle1:
+        mov ax, cx;
+        //inc eax;
+        mov bl, 8;
+        div bl;
+        xor edx, edx;
+        mov dl, ah;
+        xor ah, ah;
+        mov stl_index, eax;
+        mov str_index, edx;
+
+
+
+        loop cycle1;
+    }
+    for (size_t i = 0; i < 64; i++)
+    {
+        if (i % 8 == 0 && i != 0)
+        {
+            std::cout << '\n';
+        }
+        std::cout << matrix1[i] << ' ';
+    }
+    return 0;
+}
+
